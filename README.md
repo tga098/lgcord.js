@@ -1,6 +1,21 @@
+<div align="center">
+  <p> 
+    <a href="https://discord.gg/cYJD2Rkb2n" title="Join our Discord Server"><img alt="Built with Love" src="https://forthebadge.com/images/badges/built-with-love.svg"></a>
+    <a href="https://discord.gg/cYJD2Rkb2n" title="Join our Discord Server"><img alt="Made with Javascript" src="https://forthebadge.com/images/badges/made-with-javascript.svg"></a>
+  </p>
+  <p>
+    <a href="https://www.npmjs.com/package/lgcord.js"><img src="https://img.shields.io/npm/v/remote-map-cache.svg?maxAge=3600" alt="NPM version" /></a>
+    <a href="https://www.npmjs.com/package/lgcord.js"><img src="https://img.shields.io/npm/dt/lgcord.js.svg?maxAge=3600" alt="NPM downloads" /></a>
+  </p>
+  <p>
+    <a href="https://nodei.co/npm/lgcord.js/"><img src="https://nodei.co/npm/lgcord.js.png?downloads=true&stars=true" alt="npm installnfo" /></a>
+  </p>
+</div>
+
+
 <h1 align="center">LGcord.Js</h1>
 
-<img src="https://cdn.discordapp.com/attachments/959752620103319592/1028575159931637760/1665301818603.png">
+<img src="https://cdn.discordapp.com/attachments/929275625934581820/1028576044162228264/unknown.png" size="30%">
 
 > **A Nodejs Discord API wrapper. This is a small library that allows you to interact with Discord API to make discord bots**
 
