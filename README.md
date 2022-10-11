@@ -15,7 +15,7 @@
 
 <img src="https://cdn.discordapp.com/attachments/929275625934581820/1028576044162228264/unknown.png" size="30%">
 
-> **A Nodejs Discord API wrapper. This is a small library that allows you to interact with Discord API to make discord bots**
+> **A Nodejs Discord API wrapper. This is a library that allows you to interact with Discord API to make discord bots**
 
 ## Installation
 
