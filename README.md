@@ -25,6 +25,10 @@
 npm install lgcord.js
 ```
 
+## Docs 
+
+> http://lgcordjs.logixdev.net
+
 ## Usage
 
 > **Make a basic bot using lgcord.js**
@@ -42,30 +46,5 @@ client.on('ready', ready => {
 });
 
 client.login("bot token here");
-
-```
-
-# Events Available:
-
-- messageCreate *reply to a message or get info a message sent/receieved by the bot*
-- messageDelete *get info of a message when deleted*
-- messageUpdate *get info of a message if it gets updated/edited*
-
-*MORE EVENTS DOCS WILL BE ADDED*
-
-Embed Example:
-
-```js
-
-const { DiscordEmbed } = require("lgcord.js")
-
-let embed = new DiscordEmbed()
-.setTitle("Hello World")
-.setColor("Color")
-.setDescription('Bot using lgcord.js')
-.setFooter('Footer')
-.setTimestamp()
-
-
 
 ```
