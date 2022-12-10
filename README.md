@@ -1,6 +1,6 @@
 <h1 align="center">LGcord.Js</h1>
 
-<img src="https://cdn.discordapp.com/attachments/972146644067971153/1027552655112945724/1665058019810.png" size="50%">
+<img src="https://media.discordapp.net/attachments/913066109081620570/1051116162026573904/1665301818603_1.png" size="50%">
 
 > **A Nodejs Discord API wrapper. This is a small library that allows you to interact with Discord API to make discord bots**
 
