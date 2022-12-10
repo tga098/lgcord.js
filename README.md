@@ -34,4 +34,4 @@ client.login("bot token here");
 
 # More
 
-More explained Documentation / Guide Available [https://lgcordjs.logixdev.net]()
+More explained Documentation / Guide Available [https://lgcordjs.logixdev.net](Here)
