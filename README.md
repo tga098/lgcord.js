@@ -32,5 +32,6 @@ client.login("bot token here");
 
 ```
 
-# Documentation
- > Documentation avaiable at https://lgcordjs.logixdev.net
+# More
+
+More explained Documentation / Guide Available [https://lgcordjs.logixdev.net]()
