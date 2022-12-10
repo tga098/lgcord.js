@@ -34,7 +34,7 @@ const Client = require("../lgcord");
 const discord_guild_memeber_1 = require("./discord-guild-memeber");
 const discord_reaction_1 = __importDefault(require("./discord-reaction"));
 const discord_user_1 = require("./discord-user");
-const {channel_cache} = require("../client/cache");
+const {channel_cache, guild_cache} = require("../client/cache");
 class DiscordMessage {
     //     public nonce ? integer or string	used for validating a message was sent
     //     public pinned	boolean	whether this message is pinned
@@ -69,11 +69,13 @@ class DiscordMessage {
     static fromJson(json) {
         const newInst = new DiscordMessage(json.id, json.channel_id, discord_user_1.DiscordUser.fromJson(json.author), json.content, json.timestamp);
         const cd = channel_cache.get(json.channel_id)
+        const gd = guild_cache.get(json.guild_id)
         newInst.guild_id = json.guild_id;
         newInst.member = discord_guild_memeber_1.DiscordGuildMember.fromJson(json.member ?? {}, newInst.author);
         newInst.edited_timestamp = json.edited_timestamp;
         newInst.tts = json.tts;
         newInst.channel = cd
+        newInst.guild = gd
         newInst.mention_everyone = json.mention_everyone;
         newInst.mentions = json.mentions.map(discord_user_1.DiscordUser.fromJson);
         newInst.reactions = json.reactions?.map(discord_reaction_1.default.fromJson);

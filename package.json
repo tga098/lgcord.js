@@ -2,11 +2,8 @@
   "name": "lgcord.js",
   "version": "1.0.0",
   "description": "LGcord.js",
-  "main": "./output/index.js",
-  "types": "./output/index.d.ts",
-  "scripts": {
-    "build": "npx tsc"
-  },
+  "main": "./src/index.js",
+  "types": "./src/index.d.ts",
   "author": "tga098",
   "license": "MIT",
   "dependencies": {

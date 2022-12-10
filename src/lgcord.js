@@ -46,9 +46,9 @@ const discord_channel_pins_update_1 = require("./data-objects/discord-channel-pi
 const discord_application_command_permissions_1 = require("./data-objects/discord-application-command-permissions");
 const discord_voiceupdate_1 = require("./data-objects/discord-voice-update");
 const EVENTS_MAP = {};
-const {guild_cache} = require("./client/cache");
-const {channel_cache} = require("./client/cache");
-const {client_cache} = require("./client/cache");
+const { guild_cache } = require("./client/cache");
+const { channel_cache } = require("./client/cache");
+const { client_cache } = require("./client/cache");
 const { throws } = require("assert");
 const { read } = require("fs");
 function addEvent(type, eventId, dataMap) {
@@ -86,8 +86,8 @@ addEvent('USER_UPDATE', 'userUpdate', d => data_objects_1.DiscordUser.fromJson(d
 //addEvent('VOICE_UPDATE', 'voiceStateUpdate', d => discord_voiceupdate_1.voiceStateUpdate.fromJson(d))
 class Client extends events_1.default.EventEmitter {
 
-constructor(intents) {
-        super(); 
+    constructor(intents) {
+        super();
         //const client = client_cache.get(`user`)
         this.guilds = []
         this.client_inf = "none"
@@ -96,18 +96,20 @@ constructor(intents) {
         this.heartbeat = [];
         this.shards = 1;
         this.gatewayUrl = '';
+        this.gatewayInfo = '';
         this.intents = intents.reduce((sum, a) => sum + a, 0);
     }
 
     /** 
      * @param {client_login} login login into the client
     */
-    
+
     async login(token) {
         Client.token = token;
         if (!Client.token || typeof Client.token !== 'string') throw new Error("LGcord Error #1372\nInvalid token provided. Provide a valid token to login in to your bot");
         this.debug(`Connecting to discord gateway`)
         const gatewayInfo = await (0, discord_api_1.getGatewayBot)().catch(e => { console.log(e); return new data_objects_1.DiscordGatewayBotInfo({}); });
+        this.gatewayInfo = gatewayInfo
         this.gatewayUrl = gatewayInfo.url;
         this.shards = gatewayInfo.shards;
         const interval = setInterval(() => {
@@ -160,7 +162,22 @@ constructor(intents) {
         }
     }
 
+    join(guild, shard, channel) {
+        const options = {
+            "op": 4,
+            "d": {
+                "guild_id": guild,
+                "channel_id": channel,
+                "self_mute": false,
+                "self_deaf": false
+            }
+        }
+        const socketData = this.websocket.find(wsd => wsd.shard === shard);
+        if(socketData){
+            socketData.ws.send(JSON.stringify(options));
+        }
 
+    }
 
     debug(message) {
         this.emit('debug', message);
@@ -194,7 +211,7 @@ constructor(intents) {
             socketData.resume = true;
             socketData.ws.removeAllListeners();
             socketData.ws.close(1002);
-            const ws = new ws_1.default(`${this.gatewayUrl}/?v=8&encoding=json`);
+            const ws = new ws_1(`${this.gatewayUrl}/?v=10&encoding=json`);
             socketData.ws = ws;
             ws.addEventListener('message', (event) => this.onMessage(socketData, event, shardId));
             ws.addEventListener('close', (event) => this.onClose(event, shardId));
@@ -210,6 +227,9 @@ constructor(intents) {
     sendPayload(ws, message) {
         if (ws.readyState === ws_1.OPEN)
             ws.send(JSON.stringify(message));
+           // console.log(ws)
+        //console.log(message)
+
     }
 
     /**
@@ -225,53 +245,57 @@ constructor(intents) {
         const event = EVENTS_MAP[eventId];
         if (event) {
             this.emit(event.eventId, event.dataMap(json.d));
-            if(event.eventId == `guildCreate`) {
-              this.guilds.cache = new Map()
-              this.channels.cache = new Map()
-               const g =  _1.DiscordGuild.fromJson(json.d)
-               this.guilds.push(g)
+            if (event.eventId == `guildCreate`) {
+                this.guilds.cache = new Map()
+                this.channels.cache = new Map()
+                const g = _1.DiscordGuild.fromJson(json.d)
+                g.shardId = wsd.shard
+                g.ws = wsd
+                this.guilds.push(g)
 
-               /**
-                *  @param {guilds.cache} this.guilds.cache cache for the client 
-                *  @param {guild_cache} Cache local cache for the package
-                */
+                /**
+                 *  @param {guilds.cache} this.guilds.cache cache for the client 
+                 *  @param {guild_cache} Cache local cache for the package
+                 */
 
-               this.guilds.forEach(guild => {
-                this.guilds.cache.set(`${guild.id}`, guild)
-                guild_cache.set(`${guild.id}`, guild)
-               })
-
-               this.guilds.forEach(guild => {
-                const c = this.guilds.cache.get(`${guild.id}`)
-
-                c.channels.forEach(text => {
-                   // console.log(`CHANNEL: ${text}`)
-                    const amt = this.channels.push(text)
-                    this.channels.cache.set(`${text.id}`, text)
-                    channel_cache.set(`${text.id}`, text)
+                this.guilds.forEach(guild => {
+                    this.guilds.cache.set(`${guild.id}`, guild)
+                    guild_cache.set(`${guild.id}`, guild)
                 })
 
-               })
 
-              
+
+                this.guilds.forEach(guild => {
+                    const c = this.guilds.cache.get(`${guild.id}`)
+
+                    c.channels.forEach(text => {
+                        // console.log(`CHANNEL: ${text}`)
+                        const amt = this.channels.push(text)
+                        this.channels.cache.set(`${text.id}`, text)
+                        channel_cache.set(`${text.id}`, text)
+                    })
+
+                })
+
+
             }
         }
         else if (eventId === 'READY') {
             const ready = new _1.DiscordReady(json.d);
             this.emit('ready', ready);
             //console.log(ready)
-           // client_cache.set(`user`, ready)
+            // client_cache.set(`user`, ready)
             this.client_inf = ready
             wsd.session_id = ready.session_id;
             wsd.resume_url = ready.resume_gateway_url;
         }
         else if (eventId === 'RESUMED') {
             this.emit('resumed');
-        } 
+        }
         // eslint-disable-next-line max-len
         else if (['GUILD_JOIN_REQUEST_UPDATE', 'GUILD_JOIN_REQUEST_DELETE', 'GUILD_APPLICATION_COMMAND_INDEX_UPDATE', 'GIFT_CODE_UPDATE'].includes(eventId)) {
             //TODO: I've seen these event id's but no idea what their payload is... Can't find docs on them
-        } 
+        }
         else {
             console.log('UNKNOWN EVENT!', eventId);
         }
